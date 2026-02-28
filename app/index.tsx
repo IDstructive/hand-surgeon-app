@@ -1,9 +1,7 @@
-import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, ScrollView, TouchableOpacity, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Hand, CircleCheck, CircleX, CircleHelp } from 'lucide-react-native';
 
-import { ThemedText } from '@/components/themed-text';
-import { Fonts } from '@/constants/theme';
 import { Wound, Recommendation } from '@/data/wound';
 
 const mockWounds: Partial<Wound>[] = [
@@ -72,12 +70,14 @@ function getRecommendationInfo(recommendation: Recommendation | undefined) {
         label: 'Can be fixed in ER',
         icon: CircleCheck,
         color: '#22c55e',
+        textClass: 'text-green-500',
       };
     case 'fixInSpecializedHospital':
       return {
         label: 'Needs specialized hospital',
         icon: CircleX,
         color: '#ef4444',
+        textClass: 'text-red-500',
       };
     case 'notSure':
     default:
@@ -85,6 +85,7 @@ function getRecommendationInfo(recommendation: Recommendation | undefined) {
         label: "Can't tell",
         icon: CircleHelp,
         color: '#eab308',
+        textClass: 'text-yellow-500',
       };
   }
 }
@@ -100,33 +101,31 @@ function WoundCard({ wound }: WoundCardProps) {
   const RecIcon = recInfo.icon;
 
   return (
-    <View style={styles.card}>
-      <View style={styles.cardImageContainer}>
+    <View className="flex-row bg-gray-800 rounded-xl p-3 items-center">
+      <View className="w-20 h-20 bg-gray-300 rounded-lg justify-center items-center">
         <Hand size={40} color="#9ca3af" />
       </View>
-      <View style={styles.cardContent}>
-        <View style={styles.cardHeader}>
-          <ThemedText style={styles.cardTitle} numberOfLines={1}>
+      <View className="flex-1 ml-3 mr-2">
+        <View className="flex-row items-center justify-between">
+          <Text className="text-base font-semibold text-white flex-1" numberOfLines={1}>
             {wound.conclusion}
-          </ThemedText>
+          </Text>
           {wound.recommendation === 'notSure' && (
-            <ThemedText style={styles.cantTellLabel}>Can't tell</ThemedText>
+            <Text className="text-xs text-gray-400 ml-2">Can't tell</Text>
           )}
         </View>
-        <ThemedText style={styles.cardDate}>{dateStr}</ThemedText>
-        <View style={styles.cardMeta}>
-          <ThemedText style={styles.cardMetaText}>
+        <Text className="text-sm text-gray-400 mt-0.5">{dateStr}</Text>
+        <View className="flex-row items-center mt-1">
+          <Text className="text-sm text-gray-400">
             {wound.gender === 'male' ? '♂' : '♀'} {age}yo {'  '}
             {wound.hand === 'right' ? 'Right' : 'Left'} hand
-          </ThemedText>
+          </Text>
         </View>
         {wound.recommendation !== 'notSure' && (
-          <ThemedText style={[styles.recommendationLabel, { color: recInfo.color }]}>
-            {recInfo.label}
-          </ThemedText>
+          <Text className={`text-sm mt-1 ${recInfo.textClass}`}>{recInfo.label}</Text>
         )}
       </View>
-      <View style={styles.cardIcon}>
+      <View className="ml-auto">
         <RecIcon size={32} color={recInfo.color} fill={recInfo.color} strokeWidth={0} />
       </View>
     </View>
@@ -135,126 +134,26 @@ function WoundCard({ wound }: WoundCardProps) {
 
 export default function HomeScreen() {
   return (
-    <SafeAreaView style={styles.container}>
-      <ThemedText style={styles.title}>Wound analyzer</ThemedText>
+    <SafeAreaView className="flex-1 bg-[#151718]">
+      <Text className="text-3xl font-light text-green-400 text-center mt-5 mb-6">
+        Wound analyzer
+      </Text>
 
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
+      <ScrollView className="flex-1" contentContainerClassName="px-4 pb-24 gap-3">
         {mockWounds.map((wound) => (
           <WoundCard key={wound.id} wound={wound} />
         ))}
       </ScrollView>
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.analyzeButton} activeOpacity={0.8}>
-          <ThemedText style={styles.buttonIcon}>✊</ThemedText>
-          <ThemedText style={styles.buttonText}>Analyze a wound</ThemedText>
+      <View className="absolute bottom-10 left-0 right-0 items-center">
+        <TouchableOpacity
+          className="flex-row items-center bg-green-200 px-6 py-4 rounded-full gap-2"
+          activeOpacity={0.8}
+        >
+          <Text className="text-xl">✊</Text>
+          <Text className="text-lg font-semibold text-gray-800">Analyze a wound</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#151718',
-  },
-  title: {
-    fontSize: 32,
-    fontFamily: Fonts.rounded,
-    fontWeight: '300',
-    color: '#4ade80',
-    textAlign: 'center',
-    marginTop: 20,
-    marginBottom: 24,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingHorizontal: 16,
-    paddingBottom: 100,
-    gap: 12,
-  },
-  card: {
-    flexDirection: 'row',
-    backgroundColor: '#1f2937',
-    borderRadius: 12,
-    padding: 12,
-    alignItems: 'center',
-  },
-  cardImageContainer: {
-    width: 80,
-    height: 80,
-    backgroundColor: '#d1d5db',
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  cardContent: {
-    flex: 1,
-    marginLeft: 12,
-    marginRight: 8,
-  },
-  cardHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#fff',
-    flex: 1,
-  },
-  cantTellLabel: {
-    fontSize: 12,
-    color: '#9ca3af',
-    marginLeft: 8,
-  },
-  cardDate: {
-    fontSize: 13,
-    color: '#9ca3af',
-    marginTop: 2,
-  },
-  cardMeta: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 4,
-  },
-  cardMetaText: {
-    fontSize: 13,
-    color: '#9ca3af',
-  },
-  recommendationLabel: {
-    fontSize: 13,
-    marginTop: 4,
-  },
-  cardIcon: {
-    marginLeft: 'auto',
-  },
-  buttonContainer: {
-    position: 'absolute',
-    bottom: 40,
-    left: 0,
-    right: 0,
-    alignItems: 'center',
-  },
-  analyzeButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#bbf7d0',
-    paddingHorizontal: 24,
-    paddingVertical: 16,
-    borderRadius: 32,
-    gap: 8,
-  },
-  buttonIcon: {
-    fontSize: 20,
-  },
-  buttonText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#1f2937',
-  },
-});
