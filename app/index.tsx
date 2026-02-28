@@ -1,6 +1,7 @@
 import { View, ScrollView, TouchableOpacity, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Hand, CircleCheck, CircleX, CircleHelp } from 'lucide-react-native';
+import { Button } from '@/components/ui/button';
 
 import { Wound, Recommendation } from '@/data/wound';
 
@@ -101,7 +102,7 @@ function WoundCard({ wound }: WoundCardProps) {
   const RecIcon = recInfo.icon;
 
   return (
-    <View className="flex-row bg-gray-800 rounded-xl p-3 items-center">
+    <View className="flex-row bg-gray-100 rounded-xl p-3 items-center">
       <View className="w-20 h-20 bg-gray-300 rounded-lg justify-center items-center">
         <Hand size={40} color="#9ca3af" />
       </View>
@@ -143,6 +144,9 @@ export default function HomeScreen() {
         {mockWounds.map((wound) => (
           <WoundCard key={wound.id} wound={wound} />
         ))}
+        <Button>
+          <Text>Analyze a wound</Text>
+        </Button>
       </ScrollView>
 
       <View className="absolute bottom-10 left-0 right-0 items-center">

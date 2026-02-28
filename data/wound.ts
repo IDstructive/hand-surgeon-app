@@ -68,6 +68,6 @@ export const createEmptyWound = (): Wound => ({
   },
   conclusion: '',
   recommendation: undefined,
-  createdAt: new Date(),
-  updatedAt: new Date(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
 });
