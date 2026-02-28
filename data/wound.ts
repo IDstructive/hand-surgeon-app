@@ -47,6 +47,7 @@ export interface Wound {
   additionalInfo: string;
   impact: Impact;
   conclusion: string;
+  shortDescription: string;
   recommendation: Recommendation | undefined;
   createdAt: Date;
   updatedAt: Date;
@@ -67,6 +68,7 @@ export const createEmptyWound = (): Wound => ({
     bones: {},
   },
   conclusion: '',
+  shortDescription: '',
   recommendation: undefined,
     createdAt: new Date(),
     updatedAt: new Date(),
